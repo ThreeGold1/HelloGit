@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--
+    namespace: 命名空间-指定为接口全类名
+    id: 唯一标识
+    resultType: 返回值类型
+    #{id}: 从传递过来的参数中取出id
+-->
+<mapper namespace="cn.seeu.mapper.WordMapper">
+
+    <resultMap id="MyWord" type="cn.seeu.entry.Word">
+        <!--
+        指定主键列的封装规则
+        column指定那一列
+        property：指定对象的javaBean属性
+        id定义主键底层会有优化
+        -->
+        <id column="id" property="id"/>
+
+<!--        定义普通列封装规则-->
+        <result column="word" property="word" />
+        <result column="updated_at" property="updatedAt"/>
+        <result column="is_delete" property="isDelete"/>
+<!--        -->
+    </resultMap>
+
+    <select id="getWordById" resultMap="MyWord">
+        select id, word, updated_at updatedAt
+        from pg_word
+        where id = #{id}
+    </select>
+
+    <!--
+    useGeneratedKeys:使用曾自增主键获取主键值策略
+    keyProperty: 指定对应的主键属性，也就是mybatis获取到主键值以后，将这个值封装给哪个属性
+    -->
+    <!-- 新增 -->
+    <insert id="addWord" parameterType="cn.seeu.entry.Word" useGeneratedKeys="true" keyProperty="id">
+        insert into pg_word (word, updated_at) value (#{word}, #{updatedAt})
+    </insert>
+
+    <!-- 更新 -->
+    <update id="updateWord">
+        update pg_word
+        set updated_at = #{updatedAt}
+        where id = #{id}
+    </update>
+
+    <!-- 删除 -->
+    <delete id="deleteWord">
+        delete
+        from pg_word
+        where id = #{id}
+    </delete>
+
+    <!--
+    resultType：如果返回是一个集合，要写集合中元素的类型
+    -->
+    <!-- 获取列表 -->
+    <select id="getWordsByIsDelete" resultType="cn.seeu.entry.Word">
+        select *
+        from pg_word
+        where is_delete = #{isDelete}
+    </select>
+
+    <!-- 获取map一条 -->
+    <select id="getWordByIdReturnMap" resultType="map">
+        select *
+        from pg_word
+        where id = #{id}
+    </select>
+
+    <!-- 获取map多条 -->
+    <select id="getWordsByIsDeleteReturnMap" resultMap="MyWord">
+        select *
+        from pg_word
+        where is_delete = #{isDelete}
+    </select>
+</mapper>

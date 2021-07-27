@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+
+    <properties resource="db-config.properties"/>
+
+    <!-- 别名不区分大小写 -->
+    <typeAliases>
+        <!-- 1. 普通 -->
+        <!-- <typeAlias type="cn.seeu.entry.Word" alias="wo"/> -->
+        <!-- 2.1 package为某个包下的所有类批量起别名 -->
+        <package name="cn.seeu.entry"/>
+        <!-- 2.2 @Alias注解 -->
+    </typeAliases>
+
+    <!-- default指定使用某种环境，
+        如切换测试环境-test、开发环境-development -->
+    <environments default="development">
+        <environment id="development">
+            <transactionManager type="JDBC"/>
+            <dataSource type="POOLED">
+                <property name="driver" value="${jdbc.driver}"/>
+                <property name="url" value="${jdbc.url}"/>
+                <property name="username" value="${jdbc.username}"/>
+                <property name="password" value="${jdbc.password}"/>
+            </dataSource>
+        </environment>
+    </environments>
+
+    <mappers>
+        <mapper resource="WordMapper.xml"/>
+    </mappers>
+
+</configuration>
